@@ -15,10 +15,10 @@ import TextField from '@mui/material/TextField';
     @author McKilla Gorilla
 */
 function ListCard(props) {
-    const { store } = useContext(GlobalStoreContext);
-    const [editActive, setEditActive] = useState(false);
-    const [text, setText] = useState("");
     const { idNamePair, selected } = props;
+    const { store } = useContext(GlobalStoreContext);
+    const [ editActive, setEditActive ] = useState(false);
+    const [ text, setText ] = useState(idNamePair.name);
 
     function handleLoadList(event, id) {
         console.log("handleLoadList for " + id);
@@ -34,6 +34,13 @@ function ListCard(props) {
         }
     }
 
+    async function handleDeleteList(event, id) {
+        event.stopPropagation();
+        let _id = event.target.id;
+        _id = ("" + _id).substring("delete-list-".length);
+        store.markListForDeletion(id);
+    }
+
     function handleToggleEdit(event) {
         event.stopPropagation();
         toggleEdit();
@@ -47,20 +54,30 @@ function ListCard(props) {
         setEditActive(newActive);
     }
 
-    async function handleDeleteList(event, id) {
-        event.stopPropagation();
-        let _id = event.target.id;
-        _id = ("" + _id).substring("delete-list-".length);
-        store.markListForDeletion(id);
-    }
-
     function handleKeyPress(event) {
         if (event.code === "Enter") {
-            let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
+            // let id = event.target.id.substring("list-".length);        
+            handleBlur();
         }
     }
+
+    // handle blur->
+    function handleBlur() {
+        store.changeListName(idNamePair._id, text);
+        toggleEdit();
+    }
+
+    function handleUpdateText(event) {
+        setText(event.target.value );
+    }
+
+    // handle blur->
+    function handleBlur() {
+        // let id = event.target.id.substring("list-".length);
+        store.changeListName(idNamePair._id, text);
+        toggleEdit();
+    }
+
     function handleUpdateText(event) {
         setText(event.target.value);
     }
@@ -111,6 +128,7 @@ function ListCard(props) {
                 autoComplete="Playlist Name"
                 className='list-card'
                 onKeyPress={handleKeyPress}
+                onBlur={handleBlur}
                 onChange={handleUpdateText}
                 defaultValue={idNamePair.name}
                 inputProps={{style: {fontSize: 48}}}
