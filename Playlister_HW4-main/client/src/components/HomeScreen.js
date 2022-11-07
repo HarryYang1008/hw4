@@ -17,7 +17,8 @@ const HomeScreen = () => {
 
     useEffect(() => {
         store.loadIdNamePairs();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
     function handleCreateNewList() {
         store.createNewList();
@@ -37,6 +38,18 @@ const HomeScreen = () => {
             }
             </List>;
     }
+
+    // fool proof design ->
+    let isListModalOpen = store.isDeleteListModalOpen();
+    let editStatus = false;
+    if (store.listNameActive) {
+        editStatus = true;
+    }
+  
+    let addListClass = 'playlister-button';
+    if (isListModalOpen || editStatus)
+        addListClass += "-disabled";
+
     return (
         <div id="playlist-selector">
             <div id="list-selector-heading">
@@ -45,10 +58,11 @@ const HomeScreen = () => {
                 aria-label="add"
                 id="add-list-button"
                 onClick={handleCreateNewList}
+                className={addListClass}
             >
                 <AddIcon />
             </Fab>
-                <Typography variant="h2">Your Lists</Typography>
+                <Typography variant="h3">Your Lists</Typography>
             </div>
             <div id="list-selector-list">
                 {

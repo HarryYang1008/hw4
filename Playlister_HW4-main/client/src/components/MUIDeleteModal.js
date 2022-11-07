@@ -28,29 +28,45 @@ export default function MUIDeleteModal() {
     function handleCloseModal(event) {
         store.unmarkListForDeletion();
     }
+    
+    let modalClass = "modal";
+    if (store.isDeleteListModalOpen()) {
+        modalClass += " is-visible";
+    }
 
     return (
         <Modal
             open={store.listMarkedForDeletion !== null}
         >
             <Box sx={style}>
-                <div className="modal-dialog">
-                <header className="dialog-header">
-                    Delete the {name} Top 5 List?
-                </header>
-                <div id="confirm-cancel-container">
-                    <button
-                        id="dialog-yes-button"
-                        className="modal-button"
-                        onClick={handleDeleteList}
-                    >Confirm</button>
-                    <button
-                        id="dialog-no-button"
-                        className="modal-button"
-                        onClick={handleCloseModal}
-                    >Cancel</button>
+            <div
+        id="delete-list-modal"
+        className={modalClass}
+        data-animation="slideInOutLeft">
+        <div className="modal-root" id='verify-delete-list-root'>
+            <div className="modal-north">
+                Delete playlist?
+            </div>
+            <div className="modal-center">
+                <div className="modal-center-content">
+                    Are you sure you wish to permanently delete the {name} playlist?
                 </div>
             </div>
+            <div className="modal-south">
+                <input type="button" 
+                    id="delete-list-confirm-button" 
+                    className="modal-button" 
+                    onClick={handleDeleteList} 
+                    value='Confirm' />
+                <input 
+                    type="button" 
+                    id="delete-list-confirm-button" 
+                    className="modal-button" 
+                    onClick={handleCloseModal} 
+                    value='Cancel' />
+            </div>
+        </div>
+    </div>
             </Box>
         </Modal>
     );
