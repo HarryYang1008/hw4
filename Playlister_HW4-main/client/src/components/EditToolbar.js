@@ -15,6 +15,24 @@ import CloseIcon from '@mui/icons-material/HighlightOff';
 function EditToolbar() {
     const { store } = useContext(GlobalStoreContext);
 
+    let addSongClass = "playlister-button";
+    let undoClass = "playlister-button";
+    let redoClass = "playlister-button";
+    let closeClass = "playlister-button";
+
+    if (!store.currentList) {
+        addSongClass += " disabled";
+        undoClass += " disabled";
+        redoClass += " disabled";
+        closeClass += " disabled";
+    }
+
+    const isModalOpen = store.isEditSongModalOpen() || store.isRemoveSongModalOpen();
+    if (!store.canAddNewSong() || isModalOpen) addSongClass += "-disabled";;
+    if (!store.canUndo() || isModalOpen) undoClass += "-disabled";
+    if (!store.canRedo() || isModalOpen) redoClass += "-disabled";
+    if (!store.canClose() || isModalOpen) closeClass += "-disabled";
+
     function handleAddNewSong() {
         store.addNewSong();
     }
@@ -33,6 +51,7 @@ function EditToolbar() {
                 disabled={!store.canAddNewSong()}
                 id='add-song-button'
                 onClick={handleAddNewSong}
+                className={addSongClass}
                 variant="contained">
                 <AddIcon />
             </Button>
@@ -40,6 +59,7 @@ function EditToolbar() {
                 disabled={!store.canUndo()}
                 id='undo-button'
                 onClick={handleUndo}
+                className={undoClass}
                 variant="contained">
                     <UndoIcon />
             </Button>
@@ -47,6 +67,7 @@ function EditToolbar() {
                 disabled={!store.canRedo()}
                 id='redo-button'
                 onClick={handleRedo}
+                className={redoClass}
                 variant="contained">
                     <RedoIcon />
             </Button>
@@ -54,6 +75,7 @@ function EditToolbar() {
                 disabled={!store.canClose()}
                 id='close-button'
                 onClick={handleClose}
+                className={closeClass}
                 variant="contained">
                     <CloseIcon />
             </Button>
